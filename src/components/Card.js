@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "./Cards.css";
 import "./Card.css";
-import BinIcon from "../images/trash-button.svg";
+import binIcon from "../images/trash-button.svg";
 
-function Card({ src, title, card, onCardClick }) {
+function Card({ card, onCardClick }) {
   function handleClick() {
     onCardClick(card);
   }
@@ -11,21 +11,26 @@ function Card({ src, title, card, onCardClick }) {
     <li className="card">
       <button type="button" className="button" aria-label="trash">
         <img
-          src={BinIcon}
+          src={binIcon}
           alt="trash button"
           className="button button_type_trash"
         />
       </button>
-      <img onClick={handleClick} src={src} alt="" className="card__image" />
+      <img
+        onClick={handleClick}
+        src={card.link}
+        alt="user card image"
+        className="card__image"
+      />
       <div className="card__content">
-        <h2 className="card__title">{title}</h2>
+        <h2 className="card__title">{card.name}</h2>
         <div className="card__likes-container">
           <button
             type="button"
             className="button button_style_like"
             aria-label="like"
           ></button>
-          <div className="card__likes"></div>
+          <div className="card__likes">{card.likes.length}</div>
         </div>
       </div>
     </li>

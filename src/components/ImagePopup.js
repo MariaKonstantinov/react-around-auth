@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from "react";
 
-function ImagePopup(props) {
+function ImagePopup({ isOpen, onClose, card }) {
   return (
     <div
-      className={`popup popup_type_zoom-card ${
-        props.isOpen ? "popup_opened" : ""
-      }`}
+      className={`popup popup_type_zoom-card ${isOpen ? "popup_opened" : ""}`}
     >
       <div className="popup__window popup__zoom-wrapper">
         <button
           className="button button_type_close button_type_zoom-card"
           type="button"
           aria-label="close"
-          onClick={props.onClose}
+          onClick={onClose}
         ></button>
-        <img className="popup__zoom-image" src={props.card.link} alt="#" />
-        <p className="popup__zoom-title">{props.card.name}</p>
+        <img
+          className="popup__zoom-image"
+          src={card.link}
+          alt="zoomed user image"
+        />
+        <p className="popup__zoom-title">{card.name}</p>
       </div>
     </div>
   );

@@ -17,7 +17,7 @@ function AppMain(props) {
           <img
             className="profile__image"
             src={props.userAvatar}
-            alt="man with plant image"
+            alt="user profile image"
           />
           <div className="profile__image-overlay"></div>
         </div>
@@ -45,14 +45,8 @@ function AppMain(props) {
       {/* CARDS */}
       <section className="cards">
         <ul className="cards__grid">
-          <Card />
           {props.cards.map((card) => (
-            <Card
-              src={card.link}
-              title={card.name}
-              card={card}
-              onCardClick={props.onCardClick}
-            />
+            <Card key={card._id} card={card} onCardClick={props.onCardClick} />
           ))}
         </ul>
       </section>

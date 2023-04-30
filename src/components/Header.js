@@ -1,13 +1,13 @@
 import React from "react";
 import "./Header.css";
-import Logo from "../images/around_logo_header.svg";
+import logo from "../images/around_logo_header.svg";
 
 function Header() {
   return (
     <div className="header">
       <img
         className="header__logo"
-        src={Logo}
+        src={logo}
         alt="Around the U.S. text logo"
       />
     </div>
