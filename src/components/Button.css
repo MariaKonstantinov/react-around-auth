@@ -134,6 +134,11 @@
   visibility: visible;
 }
 
+.button_type_trash_disabled {
+  visibility: hidden;
+  opacity: 0;
+}
+
 .button_type_trash:hover {
   opacity: 50%;
 }

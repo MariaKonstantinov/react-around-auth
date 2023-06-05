@@ -25,7 +25,7 @@ class Api {
   }
 
   //edit profile info with PATCH method ---------------------------------------------->
-  editUserData(name, about) {
+  editUserData({ name, about }) {
     return this._customFetch(`${this._url}/users/me`, {
       headers: this._headers,
       method: "PATCH",
@@ -37,7 +37,7 @@ class Api {
   }
 
   // adding card to server with POST method ---------------------------------------------->
-  addCard(name, link) {
+  addCard({ name, link }) {
     return this._customFetch(`${this._url}/cards`, {
       headers: this._headers,
       method: "POST",
@@ -65,24 +65,21 @@ class Api {
     });
   }
 
-  // method to like a card  ---------------------------------------------->
-  likeCard(cardId) {
-    return this._customFetch(`${this._url}/cards/likes/${cardId}`, {
-      headers: this._headers,
-      method: "PUT",
-    });
-  }
-
-  // method to remove likes from a card ---------------------------------------------->
-  removeLike(cardId) {
-    return this._customFetch(`${this._url}/cards/likes/${cardId}`, {
-      headers: this._headers,
-      method: "DELETE",
-    });
+  // method to change likes status (like and dislike)
+  changeLikeCardStatus(cardId, isLiked) {
+    return isLiked
+      ? this._customFetch(`${this._url}/cards/likes/${cardId}`, {
+          headers: this._headers,
+          method: "DELETE",
+        })
+      : this._customFetch(`${this._url}/cards/likes/${cardId}`, {
+          headers: this._headers,
+          method: "PUT",
+        });
   }
 }
 
-// Instead of exporting the class itself, export the newly created instance
+// Instead of exporting the class itself, we export the newly created instance
 const api = new Api({
   baseUrl: "https://around.nomoreparties.co/v1/cohort-3-en",
   headers: {

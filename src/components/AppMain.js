@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 import "./AppMain.css";
 import "./Profile.css";
 import "./Popup.css";
 import "./Button.css";
 import Card from "./Card.js";
+import CurrentUserContext from "../contexts/CurrentUserContext.js";
 
 function AppMain(props) {
+  // current user object derived from the context
+  const currentUser = useContext(CurrentUserContext);
+
   return (
     <div className="content">
       {/* PROFILE */}
@@ -16,14 +20,14 @@ function AppMain(props) {
         >
           <img
             className="profile__image"
-            src={props.userAvatar}
+            src={currentUser.avatar}
             alt="user profile image"
           />
           <div className="profile__image-overlay"></div>
         </div>
         <div className="profile__info">
           <div className="profile__wrapper">
-            <h1 className="profile__name">{props.userName}</h1>
+            <h1 className="profile__name">{currentUser.name}</h1>
             <button
               onClick={props.onEditProfileClick}
               type="button"
@@ -31,7 +35,7 @@ function AppMain(props) {
               aria-label="edit"
             ></button>
           </div>
-          <p className="profile__job">{props.userDescription}</p>
+          <p className="profile__job">{currentUser.about}</p>
         </div>
 
         <button
@@ -46,7 +50,13 @@ function AppMain(props) {
       <section className="cards">
         <ul className="cards__grid">
           {props.cards.map((card) => (
-            <Card key={card._id} card={card} onCardClick={props.onCardClick} />
+            <Card
+              key={card._id}
+              card={card}
+              onCardClick={props.onCardClick}
+              onCardLike={props.onCardLike}
+              onCardDelete={props.onCardDelete}
+            />
           ))}
         </ul>
       </section>
