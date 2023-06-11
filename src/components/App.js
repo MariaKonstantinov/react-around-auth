@@ -22,7 +22,7 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
 
   // current user
-  const [currentUser, setCurrentUser] = useState("");
+  const [currentUser, setCurrentUser] = useState({});
 
   // Cards
   const [cards, setCards] = useState([]);
@@ -109,6 +109,19 @@ function App() {
     setIsDeleteCardPopupOpen(true);
     setSelectedCard(card);
   };
+
+  // SECTION: CLOSE POPUPS BY "ESCAPE" --------------------------------->
+  useEffect(() => {
+    const closeByEscape = (e) => {
+      if (e.key === "Escape") {
+        closeAllPopups();
+      }
+    };
+
+    document.addEventListener("keydown", closeByEscape);
+
+    return () => document.removeEventListener("keydown", closeByEscape);
+  }, []);
 
   // SECTION: POPUPS STATE DEFINITION - SET STATE FOR CLOSED STATE -------------------->
 
