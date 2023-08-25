@@ -1,4 +1,4 @@
-# Project 10: Travel Stories - React :seedling:
+# Project 14: Travel Stories - React :seedling:
 
 ### Practicum by Yandex Web Development Program 2023
 
@@ -6,7 +6,6 @@
 
 - Project Concept
 - Project Technologies and Features
-- Poject Roadmap
 - Project Link (Figma)
 - Project Link
 
@@ -16,17 +15,11 @@ The concept of this project - travel lovers social media app - is to help people
 
 **:four_leaf_clover: Project Technologies and Features**
 
-- React18 / React Create App / React Hooks
+- React18 / React Create App / React Hooks / Identication, Authentication, Authorization / Data manipulation in localStorage / OOP, DOM manipulation / REST API requests / CSS3 - Grid, flex, forms
 
-**:four_leaf_clover: Project Roadmap**
+**:four_leaf_clover: Project Link (Figma) design**
 
-- Sprint 1 => Build main project structure and markup using JSX, React functional components approach, React Hooks. In the next Sprint the core functiuonality of components will be added: functions for editing user data, creating new cards, and putting "likes".
-
-- Sprint 2 => Add Current User Context (currentUser state), so all app components can get access to this data. Use Context in Main, Card components. Add likes and Card deleting functionality. Refactor Profile Editing. Save data to API. Refactor Avatar Editing. Refactor Card functionality. Add DeleteCardPopup component.
-
-**:four_leaf_clover: Project Link (Figma) - initial design**
-
-- [Project Link in Figma](https://www.figma.com/file/SurN1jaeEQIhuZEDMhmWWf/Sprint-4-Around-The-U.S.-desktop-mobile?node-id=0%3A1)
+- [Project Link in Figma](https://www.figma.com/file/yXGGl4EnWYEPzGJU2dSJ1L/Sprint-14%3A-Registration-and-Authorization?type=design&node-id=1-78&mode=design&t=fKdZcOgmrqjfrzbv-0)
 
 **:four_leaf_clover: Project Link**
 

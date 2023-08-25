@@ -1,30 +1,23 @@
-/* body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@import url("./blocks/Page.css");
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-} */
+@import url("./blocks/Header.css");
 
-body {
-  font-family: "Inter", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
-  -ms-text-size-adjust: 100%;
-  -moz-text-size-adjust: 100%;
-  text-rendering: optimizeLegibility;
+@import url("./blocks/AppMain.css");
 
-  width: 100%;
-  height: 100%;
-  background-color: #000000;
-  color: #ffffff;
-  box-sizing: border-box;
-  margin: 0 auto;
-}
+@import url("./blocks/Profile.css");
+
+@import url("./blocks/Cards.css");
+
+@import url("./blocks/Card.css");
+
+@import url("./blocks/Footer.css");
+
+@import url("./blocks/Popup.css");
+
+@import url("./blocks/Form.css");
+
+@import url("./blocks/Auth.css");
+
+@import url("./blocks/Tooltip.css");
+
+@import url("./blocks/Button.css");

@@ -1,8 +1,4 @@
 import React, { useContext } from "react";
-import "./AppMain.css";
-import "./Profile.css";
-import "./Popup.css";
-import "./Button.css";
 import Card from "./Card.js";
 import CurrentUserContext from "../contexts/CurrentUserContext.js";
 

@@ -1,205 +1,171 @@
 import React, { useState, useEffect } from "react";
+import { Route, Switch, Redirect, useHistory } from "react-router-dom";
+import { auth } from "../utils/auth";
+import { AccountContext } from "../contexts/AccountContext";
+import ProtectedRoute from "./ProtectedRoute";
+
+// App components
 import Header from "./Header.js";
-import AppMain from "./AppMain.js";
 import Footer from "./Footer.js";
-import EditProfilePopup from "./EditProfilePopup.js";
-import EditAvatarPopup from "./EditAvatarPopup.js";
-import AddPlacePopup from "./AddPlacePopup.js";
-import ImagePopup from "./ImagePopup.js";
-import DeleteCardPopup from "./DeleteCardPopup.js";
-import { api } from "../utils/api.js";
-import CurrentUserContext from "../contexts/CurrentUserContext.js";
+import AppFullContent from "./AppFullContent.js";
+import Login from "./Login";
+import Register from "./Register";
+import InfoToolTip from "./InfoToolTip";
 
 function App() {
-  // SECTION: STATE DEFINITION - SET STATE FOR INITIAL STATE ------------------>
+  const history = useHistory();
 
-  // Popups
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
-  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
-  const [isCardPopupOpen, setIsCardPopupOpen] = useState(false);
-  const [isDeleteCardPopupOpen, setIsDeleteCardPopupOpen] = useState(false);
-  const [selectedCard, setSelectedCard] = useState({});
+  const [loggedIn, setLoggedIn] = useState(false);
 
-  // current user
-  const [currentUser, setCurrentUser] = useState({});
+  const [accountData, setAccountData] = useState({ _id: "", email: "" });
 
-  // Cards
-  const [cards, setCards] = useState([]);
+  const [isInfoToolTipOpen, setIsInfoToolTipOpen] = useState(false);
+  const [isInfoToolTipAction, setIsInfoToolTipAction] = useState("");
 
-  // SECTION: requesting initial data from server (Edit Profile, Cards) -------------------->
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(true);
 
   useEffect(() => {
-    api
-      .getUserData()
-      .then((userInfo) => {
-        setCurrentUser(userInfo);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+    const token = localStorage.getItem("jwt");
+    if (token) {
+      auth
+        .checkToken(token)
+        .then((res) => {
+          if (res) {
+            setLoggedIn(true);
+            setAccountData(res.data);
+            history.push("/");
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [history]);
 
-  useEffect(() => {
-    api
-      .getInitialCards()
-      .then((cards) => {
-        setCards(cards);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+  const closeAllTooltips = () => {
+    setIsInfoToolTipOpen(false);
 
-  // SECTION CARD LIKES FUNCTIONALITY --------------------------------------------------->
-  function handleCardLike(card) {
-    const isLiked = card.likes.some((user) => user._id === currentUser._id);
-    api
-      .changeLikeCardStatus(card._id, isLiked)
-      .then((newCard) => {
-        setCards((state) =>
-          state.map((currentCard) =>
-            currentCard._id === card._id ? newCard : currentCard
-          )
-        );
+    setListener(false);
+  };
+
+  const closeOnEscape = (evt) => {
+    if (evt.key === "Escape") {
+      closeAllTooltips();
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("jwt");
+    setLoggedIn(false);
+  };
+
+  const login = (userData) => {
+    setLoggedIn(true);
+    setAccountData(userData);
+    history.push("/");
+  };
+
+  const setListener = (listen) => {
+    listen
+      ? document.addEventListener("keydown", closeOnEscape)
+      : document.removeEventListener("keydown", closeOnEscape);
+  };
+
+  function handleRegister(credentials) {
+    setIsLoading(true);
+    auth
+      .register(credentials)
+      .then((res) => {
+        setIsInfoToolTipAction("successful");
+
+        login(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(`${err} one of the fields was filled in incorrectly`);
+        setIsInfoToolTipOpen(true);
+        setIsInfoToolTipAction("unsuccessful");
+      })
+      .finally(() => {
+        setListener(true);
+        setIsLoading(false);
+
+        setIsInfoToolTipOpen(true);
+      });
   }
 
-  // SECTION DELETE CARD FUNCTIONALITY --------------------------------------------------->
-  const handleDeleteCardSubmission = () => {
-    api
-      .deleteCard(selectedCard._id)
-      .then(() => {
-        setCards((state) =>
-          state.filter((currentCard) => currentCard._id !== selectedCard._id)
-        );
-        closeAllPopups();
+  function handleLogin(credentials) {
+    setIsLoading(true);
+    return auth
+      .login(credentials)
+      .then((res) => {
+        login(res.data);
+        setIsLoading(false);
       })
-      .catch((err) => console.log(err));
-  };
-
-  // SECTION: ADD CARD FUNCTIONALITY ------------------------------------------------->
-  const handleAddPlaceSubmit = ({ name, link }) => {
-    api
-      .addCard({ name, link })
-      .then((newCard) => {
-        setCards([newCard, ...cards]);
-        closeAllPopups();
+      .catch((err) => {
+        setIsInfoToolTipOpen(true);
+        setIsInfoToolTipAction("unsuccessful");
+        console.log(`${err} the user with the specified email not found`);
       })
-      .catch((err) => console.log(err));
-  };
+      .finally(() => {
+        setListener(true);
+        setIsLoading(false);
+      });
+  }
 
-  // SECTION: POPUPS STATE DEFINITION - SET STATE FOR OPENED STATE -------------------->
-
-  const handleEditAvatarClick = () => {
-    setIsEditAvatarPopupOpen(true);
-  };
-
-  const handleEditProfileClick = () => {
-    setIsEditProfilePopupOpen(true);
-  };
-
-  const handleAddPlaceClick = () => {
-    setIsAddPlacePopupOpen(true);
-  };
-
-  const handleCardClick = (card) => {
-    setIsCardPopupOpen(true);
-    setSelectedCard(card);
-  };
-
-  const handleCardDelete = (card) => {
-    setIsDeleteCardPopupOpen(true);
-    setSelectedCard(card);
-  };
-
-  // SECTION: CLOSE POPUPS BY "ESCAPE" --------------------------------->
-  useEffect(() => {
-    const closeByEscape = (e) => {
-      if (e.key === "Escape") {
-        closeAllPopups();
-      }
-    };
-
-    document.addEventListener("keydown", closeByEscape);
-
-    return () => document.removeEventListener("keydown", closeByEscape);
-  }, []);
-
-  // SECTION: POPUPS STATE DEFINITION - SET STATE FOR CLOSED STATE -------------------->
-
-  const closeAllPopups = () => {
-    setIsEditAvatarPopupOpen(false);
-    setIsEditProfilePopupOpen(false);
-    setIsAddPlacePopupOpen(false);
-    setIsCardPopupOpen(false);
-    setIsDeleteCardPopupOpen(false);
-    setSelectedCard({});
-  };
-
-  // SECTION: UPDATE USER FUNCTIONALITY ------------------------------------------------->
-  const handleUpdateUser = ({ name, about }) => {
-    api
-      .editUserData({ name, about })
-      .then((newUser) => {
-        setCurrentUser(newUser);
-        closeAllPopups();
-      })
-      .catch((err) => console.log(err));
-  };
-
-  // SECTION: UPDATE AVATAR FUNCTIONALITY ------------------------------------------------->
-  const handleUpdateAvatar = ({ avatar }) => {
-    api
-      .editAvatar(avatar)
-      .then((newUser) => {
-        setCurrentUser(newUser);
-        closeAllPopups();
-      })
-      .catch((err) => console.log(err));
-  };
+  function handleShowTooltip(success, text) {
+    setIsSuccess(success);
+    setIsInfoToolTipAction(text);
+    setIsInfoToolTipOpen(true);
+  }
 
   return (
-    <CurrentUserContext.Provider value={currentUser}>
+    <AccountContext.Provider value={{ loggedIn, accountData }}>
       <div className="App">
-        <Header />
-        <AppMain
-          onEditProfileClick={handleEditProfileClick}
-          onAddPlaceClick={handleAddPlaceClick}
-          onEditAvatarClick={handleEditAvatarClick}
-          onCardClick={handleCardClick}
-          cards={cards}
-          onCardDelete={handleCardDelete}
-          onCardLike={handleCardLike}
+        <Header
+          loggedIn={loggedIn}
+          userEmail={accountData.email}
+          handleLogout={handleLogout}
+        />
+
+        <Switch>
+          <ProtectedRoute
+            exact
+            path="/"
+            component={AppFullContent}
+            loggedIn={loggedIn}
+          />
+
+          <Route path="/signin">
+            <Login
+              handleLogin={handleLogin}
+              showTooltip={handleShowTooltip}
+              isLoading={isLoading}
+            />
+          </Route>
+
+          <Route path="/signup">
+            <Register
+              handleRegister={handleRegister}
+              showTooltip={handleShowTooltip}
+              isLoading={isLoading}
+            />
+          </Route>
+
+          <Route>
+            {loggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />}
+          </Route>
+        </Switch>
+
+        <InfoToolTip
+          isOpen={isInfoToolTipOpen}
+          onClose={closeAllTooltips}
+          isSuccess={isSuccess}
+          action={isInfoToolTipAction}
+          isToolTipOpen={isInfoToolTipOpen}
+          name="tooltip"
         />
         <Footer />
-
-        <EditProfilePopup
-          isOpen={isEditProfilePopupOpen}
-          onClose={closeAllPopups}
-          onUpdateUser={handleUpdateUser}
-        />
-        <EditAvatarPopup
-          isOpen={isEditAvatarPopupOpen}
-          onClose={closeAllPopups}
-          onUpdateAvatar={handleUpdateAvatar}
-        />
-        <AddPlacePopup
-          isOpen={isAddPlacePopupOpen}
-          onClose={closeAllPopups}
-          onAddPlaceSubmit={handleAddPlaceSubmit}
-        />
-
-        <ImagePopup
-          card={selectedCard}
-          isOpen={isCardPopupOpen}
-          onClose={closeAllPopups}
-        />
-
-        <DeleteCardPopup
-          isOpen={isDeleteCardPopupOpen}
-          onClose={closeAllPopups}
-          onDeleteCardSubmission={handleDeleteCardSubmission}
-        />
       </div>
-    </CurrentUserContext.Provider>
+    </AccountContext.Provider>
   );
 }
 

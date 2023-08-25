@@ -1,7 +1,9 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PopupWithForm from "./PopupWithForm";
 
 function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
+  const [isAvatarLinkValid, setIsAvatarLinkValid] = useState(true);
+  const [avatarLinkErrorMessage, setAvatarLinkErrorMessage] = useState("");
   const avatarInput = useRef("");
 
   function handleSubmit(e) {
@@ -16,6 +18,11 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
     avatarInput.current.value = "";
   }, [isOpen]);
 
+  function handleTestValidity(evt) {
+    setIsAvatarLinkValid(evt.target.validity.valid);
+    setAvatarLinkErrorMessage(avatarInput.current.validationMessage);
+  }
+
   return (
     <PopupWithForm
       name="edit-avatar"
@@ -25,19 +32,31 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
       onClose={onClose}
       onSubmit={handleSubmit}
     >
-      <input
-        type="url"
-        required
-        className="popup__input popup__input_type_image-link"
-        name="editAvatarFormImageLinkInput"
-        placeholder="Profile Image link"
-        id="avatar-edit-form-link-input"
-        ref={avatarInput}
-      />
-      <span
-        id="avatar-edit-form-link-input-error"
-        className="popup__form-error"
-      ></span>
+      <fieldset className="form__fieldset">
+        <input
+          type="url"
+          required
+          // className="popup__input popup__input_type_image-link"
+          className={`form__input popup__input popup__input_type_image-link ${
+            !isAvatarLinkValid && `form__input_type_error`
+          }`}
+          name="editAvatarFormImageLinkInput"
+          placeholder="Profile Image link"
+          id="avatar-edit-form-link-input"
+          onChange={handleTestValidity}
+          ref={avatarInput}
+        />
+
+        <span
+          className={`form__input-error ${
+            !isAvatarLinkValid && `form__input-error_visible`
+          }`}
+          id="avatar-edit-form-link-input-error"
+          // className="popup__form-error"
+        >
+          {avatarLinkErrorMessage}
+        </span>
+      </fieldset>
     </PopupWithForm>
   );
 }

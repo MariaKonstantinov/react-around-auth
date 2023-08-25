@@ -1,6 +1,4 @@
 import React, { useContext } from "react";
-import "./Cards.css";
-import "./Card.css";
 import binIcon from "../images/trash-button.svg";
 import CurrentUserContext from "../contexts/CurrentUserContext.js";
 
@@ -43,6 +41,7 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
         className={`button ${cardDeleteButtonClassName}`}
         aria-label="delete card button"
         onClick={handleDeleteClick}
+        // key={card._id}
       >
         <img
           src={binIcon}
