@@ -1,27 +1,24 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import PopupWithForm from "./PopupWithForm";
+import { useFormAndValidation } from "../hooks/useFormAndValidation";
 
 function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
-  const [isAvatarLinkValid, setIsAvatarLinkValid] = useState(true);
-  const [avatarLinkErrorMessage, setAvatarLinkErrorMessage] = useState("");
-  const avatarInput = useRef("");
+  const { values, handleChange, errors, isValid, resetForm } =
+    useFormAndValidation();
 
-  function handleSubmit(e) {
+  useEffect(() => {
+    if (!isOpen) {
+      resetForm();
+    }
+  }, [isOpen, resetForm]);
+
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     onUpdateAvatar({
-      avatar: avatarInput.current.value,
+      avatar: values.editAvatarFormImageLinkInput || "",
     });
-  }
-
-  useEffect(() => {
-    avatarInput.current.value = "";
-  }, [isOpen]);
-
-  function handleTestValidity(evt) {
-    setIsAvatarLinkValid(evt.target.validity.valid);
-    setAvatarLinkErrorMessage(avatarInput.current.validationMessage);
-  }
+  };
 
   return (
     <PopupWithForm
@@ -31,30 +28,29 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
+      isDisabled={!isValid}
     >
       <fieldset className="form__fieldset">
         <input
           type="url"
           required
-          // className="popup__input popup__input_type_image-link"
           className={`form__input popup__input popup__input_type_image-link ${
-            !isAvatarLinkValid && `form__input_type_error`
+            errors.editAvatarFormImageLinkInput && "form__input_type_error"
           }`}
           name="editAvatarFormImageLinkInput"
           placeholder="Profile Image link"
           id="avatar-edit-form-link-input"
-          onChange={handleTestValidity}
-          ref={avatarInput}
+          onChange={handleChange}
+          value={values.editAvatarFormImageLinkInput || ""}
         />
 
         <span
           className={`form__input-error ${
-            !isAvatarLinkValid && `form__input-error_visible`
+            errors.editAvatarFormImageLinkInput && "form__input-error_visible"
           }`}
           id="avatar-edit-form-link-input-error"
-          // className="popup__form-error"
         >
-          {avatarLinkErrorMessage}
+          {errors.editAvatarFormImageLinkInput}
         </span>
       </fieldset>
     </PopupWithForm>

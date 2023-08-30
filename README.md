@@ -15,7 +15,7 @@ The concept of this project - travel lovers social media app - is to help people
 
 **:four_leaf_clover: Project Technologies and Features**
 
-- React18 / React Create App / React Hooks / Identication, Authentication, Authorization / Data manipulation in localStorage / OOP, DOM manipulation / REST API requests / CSS3 - Grid, flex, forms
+- React18 / React Create App / React Hooks / Custom Validation Hook / Identication, Authentication, Authorization / Data manipulation in localStorage / OOP, DOM manipulation / REST API requests / CSS3 - Grid, flex, forms
 
 **:four_leaf_clover: Project Link (Figma) design**
 

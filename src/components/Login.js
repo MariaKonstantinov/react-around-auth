@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-import FieldForm from "./FieldForm";
+import FormField from "./FormField";
 
 function Login({ handleLogin, isLoading }) {
   const [values, setValues] = useState({ email: "", password: "" });
@@ -38,7 +38,7 @@ function Login({ handleLogin, isLoading }) {
     <div className="auth">
       <h1 className="auth__title">Log in</h1>
       <form className="auth__form" onSubmit={handleSubmit} name="login-form">
-        <FieldForm
+        <FormField
           type="email"
           name="login-email"
           label="Email"
@@ -47,7 +47,7 @@ function Login({ handleLogin, isLoading }) {
           handleChange={handleChange}
         />
 
-        <FieldForm
+        <FormField
           type="password"
           name="login-password"
           label="Password"

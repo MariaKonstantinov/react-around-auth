@@ -1,58 +1,34 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import PopupWithForm from "./PopupWithForm";
 import CurrentUserContext from "../contexts/CurrentUserContext.js";
+import { useFormAndValidation } from "../hooks/useFormAndValidation";
 
 function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
   // Subscription to the context
   const currentUser = useContext(CurrentUserContext);
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [isNameValid, setIsNameValid] = useState(true);
-  const [isDescriptionValid, setIsDescriptionValid] = useState(true);
-  const [nameErrorMessage, setNameErrorMessage] = useState("");
-  const [descriptionErrorMessage, setDescriptionErrorMessage] = useState("");
+  const { values, handleChange, errors, isValid, resetForm } =
+    useFormAndValidation();
 
   // After loading the current user from the API, their data will be used in managed components
+
   useEffect(() => {
-    setName(currentUser.name || "");
-    setDescription(currentUser.about || "");
-    setIsNameValid(true);
-    setIsDescriptionValid(true);
-    setNameErrorMessage("");
-    setDescriptionErrorMessage("");
-  }, [currentUser, isOpen]);
-
-  function handleChangeName(e) {
-    // setName(e.target.value);
-
-    const { value, validity, validationMessage } = e.target;
-    setName(value);
-    setIsNameValid(validity.valid);
-    if (!validity.valid) {
-      setNameErrorMessage(validationMessage);
+    if (!isOpen) {
+      resetForm({
+        profileFormNameInput: currentUser.name || "",
+        profileFormJobInput: currentUser.about || "",
+      });
     }
-  }
+  }, [currentUser, isOpen, resetForm]);
 
-  function handleChangeDescription(e) {
-    // setDescription(e.target.value);
-    const { value, validity, validationMessage } = e.target;
-    setDescription(value);
-    setIsDescriptionValid(validity.valid);
-    if (!validity.valid) {
-      setDescriptionErrorMessage(validationMessage);
-    }
-  }
-
-  function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Passing the values of the managed components to the external handler
     onUpdateUser({
-      name,
-      about: description,
+      name: values.profileFormNameInput || "",
+      about: values.profileFormJobInput || "",
     });
-  }
+  };
 
   return (
     <PopupWithForm
@@ -62,19 +38,18 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
+      isDisabled={!isValid}
     >
       <fieldset className="form__fieldset">
         <input
           type="text"
           required
-          // className="popup__input popup__input_type_name"
           className={`form__input popup__input popup__input_type_name ${
-            !isNameValid && `form__input_type_error`
+            errors.profileFormNameInput && "form__input_type_error"
           }`}
           name="profileFormNameInput"
-          onChange={handleChangeName}
-          // value={name || ""}
-          value={name}
+          onChange={handleChange}
+          value={values.profileFormNameInput || ""}
           placeholder="Your name"
           minLength="2"
           maxLength="40"
@@ -83,25 +58,22 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
 
         <span
           id="profile-edit-form-name-input-error"
-          // className="popup__form-error"
           className={`form__input-error ${
-            !isNameValid && `form__input-error_visible`
+            errors.profileFormNameInput && "form__input-error_visible"
           }`}
         >
-          {nameErrorMessage}
+          {errors.profileFormNameInput}
         </span>
 
         <input
           type="text"
           required
-          // className="popup__input popup__input_type_job"
           className={`form__input popup__input popup__input_type_job ${
-            !isDescriptionValid && `form__input_type_error`
+            errors.profileFormJobInput && "form__input_type_error"
           }`}
           name="profileFormJobInput"
-          onChange={handleChangeDescription}
-          // value={description || ""}
-          value={description}
+          onChange={handleChange}
+          value={values.profileFormJobInput || ""}
           placeholder="Your job"
           minLength="2"
           maxLength="200"
@@ -110,12 +82,11 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
 
         <span
           id="profile-edit-form-job-input-error"
-          // className="popup__form-error"
           className={`form__input-error ${
-            !isDescriptionValid && `form__input-error_visible`
+            errors.profileFormJobInput && "form__input-error_visible"
           }`}
         >
-          {descriptionErrorMessage}
+          {errors.profileFormJobInput}
         </span>
       </fieldset>
     </PopupWithForm>

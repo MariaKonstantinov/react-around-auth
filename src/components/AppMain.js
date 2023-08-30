@@ -7,7 +7,7 @@ function AppMain(props) {
   const currentUser = useContext(CurrentUserContext);
 
   return (
-    <div className="content">
+    <div className="main">
       {/* PROFILE */}
       <div className="profile">
         <div

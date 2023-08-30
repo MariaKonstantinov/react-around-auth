@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import PopupWithForm from "./PopupWithForm";
+import Popup from "./Popup.js";
 import successfulIcon from "../images/successful.svg";
 import failIcon from "../images/fail.svg";
 
-function InfoToolTip({ isOpen, onClose, action }) {
+function InfoToolTip({ isOpen, onClose, action, name }) {
   const success = action === "successful";
 
   useEffect(() => {
@@ -16,7 +16,7 @@ function InfoToolTip({ isOpen, onClose, action }) {
   });
 
   return (
-    <PopupWithForm isOpen={isOpen} onClose={onClose} name="tooltip">
+    <Popup isOpen={isOpen} name={name} onClose={onClose}>
       <img
         className="tooltip__icon"
         src={success ? successfulIcon : failIcon}
@@ -27,7 +27,7 @@ function InfoToolTip({ isOpen, onClose, action }) {
           ? `Success! You have now been registered.`
           : `Oops, something went wrong! Please try again.`}
       </p>
-    </PopupWithForm>
+    </Popup>
   );
 }
 

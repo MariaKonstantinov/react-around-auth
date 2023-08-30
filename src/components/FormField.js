@@ -1,4 +1,4 @@
-function FieldForm(props) {
+function FormField(props) {
   return (
     <>
       <input
@@ -30,4 +30,4 @@ function FieldForm(props) {
   );
 }
 
-export default FieldForm;
+export default FormField;

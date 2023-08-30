@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-import FieldForm from "./FieldForm";
+import FormField from "./FormField";
 
 function Register({ handleRegister, isLoading }) {
   const [values, setValues] = useState({ email: "", password: "" });
@@ -35,7 +35,7 @@ function Register({ handleRegister, isLoading }) {
     <div className="auth">
       <h1 className="auth__title">Sign up</h1>
       <form className="auth__form" onSubmit={handleSubmit} name="register-form">
-        <FieldForm
+        <FormField
           type="email"
           name="signup-email"
           label="Email"
@@ -45,7 +45,7 @@ function Register({ handleRegister, isLoading }) {
           handleChange={handleChange}
         />
 
-        <FieldForm
+        <FormField
           type="password"
           name="sign-password"
           label="Password"

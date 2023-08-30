@@ -1,55 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import PopupWithForm from "./PopupWithForm";
+import { useFormAndValidation } from "../hooks/useFormAndValidation";
 
 function AddPlacePopup({ isOpen, onClose, onAddPlaceSubmit }) {
-  const [cardsName, setCardsName] = useState("");
-  const [cardsImageLink, setCardsImageLink] = useState("");
-  const [isCardsNameValid, setIsCardsNameValid] = useState(true);
-  const [isCardsImageLinkValid, setIsCardsImageLinkValid] = useState(true);
-  const [cardsNameErrorMessage, setCardsNameErrorMessage] = useState("");
-  const [cardsImageLinkErrorMessage, setCardsImageLinkErrorMessage] =
-    useState("");
+  const { values, handleChange, errors, isValid, resetForm } =
+    useFormAndValidation();
 
   useEffect(() => {
-    setCardsName("");
-    setCardsImageLink("");
-    setIsCardsNameValid(true);
-    setIsCardsImageLinkValid(true);
-    setCardsNameErrorMessage("");
-    setCardsImageLinkErrorMessage("");
-  }, [isOpen]);
-
-  const handleTitleChange = (evt) => {
-    const { value, validity, validationMessage } = evt.target;
-    setCardsName(value);
-    setIsCardsNameValid(validity.valid);
-    if (!validity.valid) {
-      setCardsNameErrorMessage(validationMessage);
+    if (!isOpen) {
+      resetForm();
     }
-  };
+  }, [isOpen, resetForm]);
 
-  const handleImageLinkChange = (evt) => {
-    const { value, validity, validationMessage } = evt.target;
-    setCardsImageLink(value);
-    setIsCardsImageLinkValid(validity.valid);
-    if (!validity.valid) {
-      setCardsImageLinkErrorMessage(validationMessage);
-    }
-  };
-
-  function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     onAddPlaceSubmit({
-      name: cardsName,
-      link: cardsImageLink,
+      name: values.newCardFormImageTitleInput || "",
+      link: values.newCardFormImageLinkInput || "",
     });
-  }
-
-  // useEffect(() => {
-  //   cardNameRef.current.value = "";
-  //   cardLinkRef.current.value = "";
-  // }, [isOpen]);
+  };
 
   return (
     <PopupWithForm
@@ -59,56 +29,53 @@ function AddPlacePopup({ isOpen, onClose, onAddPlaceSubmit }) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
+      isDisabled={!isValid}
     >
       <fieldset className="form__fieldset">
         <input
           type="text"
           required
-          // className="popup__input popup__input_type_image-title"
           className={`form__input popup__input popup__input_type_image-title ${
-            !isCardsNameValid && `form__input_type_error`
+            errors.newCardFormImageTitleInput && "form__input_type_error"
           }`}
           name="newCardFormImageTitleInput"
           placeholder="Title"
           minLength="1"
           maxLength="30"
           id="card-add-form-title-input"
-          onChange={handleTitleChange}
-          value={cardsName}
+          onChange={handleChange}
+          value={values.newCardFormImageTitleInput || ""}
         />
 
         <span
           className={`form__input-error ${
-            !isCardsNameValid && `form__input-error_visible`
+            errors.newCardFormImageTitleInput && "form__input-error_visible"
           }`}
           id="card-add-form-title-input-error"
-          // className="popup__form-error"
         >
-          {cardsNameErrorMessage}
+          {errors.newCardFormImageTitleInput}
         </span>
 
         <input
           type="url"
           required
-          // className="popup__input popup__input_type_image-link"
           className={`form__input popup__input popup__input_type_image-link ${
-            !isCardsImageLinkValid && `form__input_type_error`
+            errors.newCardFormImageLinkInput && "form__input_type_error"
           }`}
           name="newCardFormImageLinkInput"
           placeholder="Image link"
           id="card-add-form-link-input"
-          onChange={handleImageLinkChange}
-          value={cardsImageLink}
+          onChange={handleChange}
+          value={values.newCardFormImageLinkInput || ""}
         />
 
         <span
           id="card-add-form-link-input-error"
-          // className="popup__form-error"
           className={`form__input-error ${
-            !isCardsImageLinkValid && `form__input-error_visible`
+            errors.newCardFormImageLinkInput && "form__input-error_visible"
           }`}
         >
-          {cardsImageLinkErrorMessage}
+          {errors.newCardFormImageLinkInput}
         </span>
       </fieldset>
     </PopupWithForm>

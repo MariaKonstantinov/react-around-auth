@@ -87,8 +87,6 @@ function App() {
       .finally(() => {
         setListener(true);
         setIsLoading(false);
-
-        setIsInfoToolTipOpen(true);
       });
   }
 
