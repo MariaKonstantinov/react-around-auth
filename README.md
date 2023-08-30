@@ -23,4 +23,4 @@ The concept of this project - travel lovers social media app - is to help people
 
 **:four_leaf_clover: Project Link**
 
-- [Project Link](https://mariakonstantinov.github.io/around-react-auth)
+- [Project Link](https://mariakonstantinov.github.io/react-around-auth)
